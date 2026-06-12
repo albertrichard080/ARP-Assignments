@@ -1,0 +1,15 @@
+# ARP drone simulator - parameter file (assignment 1)
+# Every value can be changed WHILE the simulator runs: the blackboard
+# polls this file and applies new values immediately.
+
+# --- drone dynamics ---------------------------------------------------
+mass            = 1.0      # M [kg]
+viscosity       = 1.0      # K [N*s/m]
+force_step      = 1.0      # |F| increment per key press [N]
+max_cmd_force   = 20.0     # command force saturation [N]
+sim_period_ms   = 50       # integration interval T [ms] (10..100)
+
+# --- Latombe / Khatib repulsion (geofence walls) ----------------------
+rho             = 5.0      # perception radius [m]
+eta             = 1.0      # repulsion gain
+max_rep_force   = 15.0     # clamp [N]

@@ -1,0 +1,11 @@
+# track only the three assignment deliverables
+/*
+!/assignment1
+!/assignment2
+!/assignment3
+!/README.md
+!/.gitignore
+
+# build artifacts and runtime logs
+**/bin/
+**/logs/
