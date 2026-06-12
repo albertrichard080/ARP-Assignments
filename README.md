@@ -58,7 +58,8 @@ The system is a concurrent, multi-process **Blackboard Architecture**. The `Blac
 * **Algorithms:**
   1. **Motion integration:** Euler method (section 3).
   2. **Repulsion model:** Latombe/Khatib potential fields, applied to the obstacles and to the four borders of the area.
-  3. The repulsion is saturated near zero distance to avoid numerical explosions.
+  3. **Virtual key mapping:** the total repulsion is projected on the 8 command directions and the strongest component is applied as a virtual key pressure, as the assignment sheet suggests.
+  4. The repulsion is saturated near zero distance to avoid numerical explosions.
 
 ### D. Keyboard Manager + Windows (`src/input.c`)
 * **Role:** input handler and renderer.
@@ -170,6 +171,7 @@ p         : suspend / resume
 b         : reset
 q         : quit
 ```
+The arrow keys work as well (mapped to up / down / left / right).
 Every key press adds one force step (1 N) in that direction; the opposite key decreases it; `d` puts the command force to zero.
 
 ### Visual Legend

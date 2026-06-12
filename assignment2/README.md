@@ -45,7 +45,10 @@ loop), dotted arrows are SIGUSR1 heartbeats.
 * **Role:** physics engine.
 * **Algorithms:** Euler integration (see assignment 1); Latombe/Khatib
   repulsion from every obstacle and from the four borders:
-  F = eta (1/d - 1/rho) / d^2 for d < rho, saturated near d = 0.
+  F = eta (1/d - 1/rho) / d^2 for d < rho, saturated near d = 0. The
+  total repulsion is applied as a virtual key pressure (projection on
+  the 8 command directions, keeping the strongest), as the sheet
+  suggests.
 
 ### D. Keyboard Manager + Windows (`src/input.c`)
 * **Role:** input handler and renderer (ncurses).
@@ -125,6 +128,7 @@ s / d / f : Left       / BRAKE  / Right
 x / c / v : Down-Left  / Down   / Down-Right
 p suspend/resume    b reset    q quit
 ```
+The arrow keys work as well.
 
 * Legend: blue `+` drone, green `1..9` targets (reach them in order),
   yellow `o` obstacles.

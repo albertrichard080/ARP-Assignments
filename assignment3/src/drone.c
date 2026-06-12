@@ -122,20 +122,34 @@ int main(int argc, char **argv)
             double T = P.sim_period_ms * 1e-3;
             double Fx = cmd_f.x, Fy = cmd_f.y;
 
-            /* obstacle repulsion */
+            /* repulsion: obstacles + geofence walls (Latombe/Khatib) */
             double tnow = now_sec();
+            double Rx = 0, Ry = 0;
             for (int i = 0; i < obst.n; i++) {
                 if (obst.die_at[i] > 0 && tnow > obst.die_at[i]) continue;
                 double ddx = x1 - obst.pos[i].x, ddy = y1 - obst.pos[i].y;
                 double d = hypot(ddx, ddy);
                 double f = rep_mag(d, &P);
-                if (f > 0 && d > 1e-9) { Fx += f * ddx / d; Fy += f * ddy / d; }
+                if (f > 0 && d > 1e-9) { Rx += f * ddx / d; Ry += f * ddy / d; }
             }
-            /* geofence walls repulse as well */
-            Fx += rep_mag(x1, &P);                    /* left wall   */
-            Fx -= rep_mag(WORLD_W - x1, &P);          /* right wall  */
-            Fy += rep_mag(y1, &P);                    /* bottom wall */
-            Fy -= rep_mag(WORLD_H - y1, &P);          /* top wall    */
+            Rx += rep_mag(x1, &P);                    /* left wall   */
+            Rx -= rep_mag(WORLD_W - x1, &P);          /* right wall  */
+            Ry += rep_mag(y1, &P);                    /* bottom wall */
+            Ry -= rep_mag(WORLD_H - y1, &P);          /* top wall    */
+
+            /* turn the repulsion into a "virtual key pressure": project it
+             * on the 8 command directions and keep the strongest one, as
+             * suggested by the assignment sheet */
+            if (Rx != 0 || Ry != 0) {
+                static const double DX[8] = {1,-1,0,0, SQ2, SQ2,-SQ2,-SQ2};
+                static const double DY[8] = {0,0,1,-1, SQ2,-SQ2, SQ2,-SQ2};
+                double best = 0; int bi = -1;
+                for (int k = 0; k < 8; k++) {
+                    double dot = Rx * DX[k] + Ry * DY[k];
+                    if (dot > best) { best = dot; bi = k; }
+                }
+                if (bi >= 0) { Fx += best * DX[bi]; Fy += best * DY[bi]; }
+            }
 
             double den = P.mass + P.visc * T;
             double xi = (Fx * T * T + P.mass * (2 * x1 - x2) + P.visc * T * x1) / den;

@@ -51,6 +51,11 @@ int main(int argc, char **argv)
         heartbeat(wd);
 
         int ch = getch();
+        /* the sheet allows arrows too: map them onto the key cluster */
+        if (ch == KEY_UP)    ch = 'e';
+        else if (ch == KEY_DOWN)  ch = 'c';
+        else if (ch == KEY_LEFT)  ch = 's';
+        else if (ch == KEY_RIGHT) ch = 'f';
         if (ch != ERR) {
             if (ch == 'q') {
                 msg_t m = { .type = MSG_QUIT };
@@ -149,6 +154,7 @@ int main(int argc, char **argv)
         mvprintw(19, ix, "keys  w e r   p pause");
         mvprintw(20, ix, "      s d f   b reset");
         mvprintw(21, ix, "      x c v   q quit");
+        mvprintw(22, ix, "      (arrows work too)");
         if (!have_world) mvprintw(rows / 2, 2, " waiting for blackboard ... ");
         refresh();
     }

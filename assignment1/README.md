@@ -43,7 +43,9 @@ I (keyboard, ncurses)  --- keys, quit --->  B  <--- drone state ---  D (dynamics
   of the four borders, integrates with the Euler method and sends the new
   state to B.
 * **Algorithms:** Euler integration; Latombe/Khatib repulsion for the
-  geo-fence walls, F = eta (1/d - 1/rho) / d^2 for d < rho.
+  geo-fence walls, F = eta (1/d - 1/rho) / d^2 for d < rho; the repulsion
+  is applied as a virtual key pressure (projection on the 8 command
+  directions, keeping the strongest), as the assignment sheet suggests.
 
 ### D. Keyboard Manager + Window (`src/input.c`)
 * **Role:** user interface.
@@ -101,6 +103,7 @@ s / d / f : Left       / BRAKE  / Right
 x / c / v : Down-Left  / Down   / Down-Right
 p suspend/resume    b reset    q quit
 ```
+The arrow keys work as well.
 
 The parameters (M, K, T, force step, rho, eta) are in `params.txt` and are
 re-read while the simulator runs. Each process writes its own log in
