@@ -15,7 +15,7 @@ void params_default(params_t *p)
     p->n_targ        = 7;
     p->obst_min_life = 10;
     p->obst_max_life = 40;
-    p->target_radius    = 2.0;
+    p->target_radius    = 3.0;
     p->collision_radius = 1.0;
     p->wd_timeout    = 10;
     p->net_port      = 5500;

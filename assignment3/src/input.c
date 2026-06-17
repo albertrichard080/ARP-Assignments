@@ -113,9 +113,16 @@ int main(int argc, char **argv)
             mvaddch(SCRY(W.obst.pos[i].y), SCRX(W.obst.pos[i].x), 'o');
         attroff(COLOR_PAIR(3) | A_BOLD);
 
-        attron(COLOR_PAIR(2) | A_BOLD);
+        /* the next target to reach is the lowest id: highlight it */
+        int nx = -1;
         for (int i = 0; i < W.targ.n; i++)
+            if (nx < 0 || W.targ.id[i] < W.targ.id[nx]) nx = i;
+        attron(COLOR_PAIR(2) | A_BOLD);
+        for (int i = 0; i < W.targ.n; i++) {
+            if (i == nx) attron(A_REVERSE);
             mvaddch(SCRY(W.targ.pos[i].y), SCRX(W.targ.pos[i].x), '0' + W.targ.id[i]);
+            if (i == nx) attroff(A_REVERSE);
+        }
         attroff(COLOR_PAIR(2) | A_BOLD);
 
         if (W.have_netdrone) {                    /* the peer's drone */
@@ -141,7 +148,10 @@ int main(int argc, char **argv)
         mvprintw( 5, ix, "cmd F : %7.2f %7.2f N", W.cmd_f.x, W.cmd_f.y);
         mvprintw( 6, ix, "tot F : %7.2f %7.2f N", W.tot_f.x, W.tot_f.y);
         mvprintw( 8, ix, "targets reached : %d", W.reached);
-        mvprintw( 9, ix, "targets left    : %d", W.targ.n);
+        if (W.targ.n > 0)
+            mvprintw( 9, ix, "next target     : %d  (%d left)", W.targ.id[nx], W.targ.n);
+        else
+            mvprintw( 9, ix, "targets left    : 0");
         mvprintw(10, ix, "obstacles       : %d", W.obst.n);
         mvprintw(11, ix, "hits            : %d", W.hits);
         mvprintw(12, ix, "distance        : %.1f m", W.dist);
